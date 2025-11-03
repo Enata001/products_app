@@ -7,3 +7,7 @@ final productListNotifier =
     StateNotifierProvider<ProductsNotifier, AsyncValue<List<ProductModel>>>(
       (ref) => ProductsNotifier(),
     );
+
+final productFilterProvider = StateProvider<ProductFilter>((ref) => ProductFilter.all);
+
+final productSortProvider = StateProvider<ProductSort>((ref) => ProductSort.none);

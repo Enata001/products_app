@@ -12,12 +12,14 @@ class ProductsScreen extends ConsumerStatefulWidget {
 }
 
 class _ProductsScreenState extends ConsumerState<ProductsScreen> {
-  String _selectedFilter = 'all';
-  String _selectedSort = 'none';
 
   @override
   Widget build(BuildContext context) {
     final productsAsync = ref.watch(productListNotifier);
+    final productsNotifier = ref.watch(productListNotifier.notifier);
+    final selectedFilter = ref.watch(productFilterProvider);
+    final selectedSort = ref.watch(productSortProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -36,23 +38,26 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             padding: const EdgeInsets.only(right: 12),
             child: Row(
               children: [
-                PopupMenuButton<String>(
+                PopupMenuButton<ProductFilter>(
                   position: PopupMenuPosition.under,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   onSelected: (value) {
-                    setState(() => _selectedFilter = value);
+                    ref.read(productFilterProvider.notifier).state = value;
                   },
 
                   itemBuilder: (context) => [
                     const PopupMenuItem(
-                      value: 'all',
+                      value: ProductFilter.all,
                       child: Text('All Products'),
                     ),
-                    const PopupMenuItem(value: 'top', child: Text('Top Rated')),
                     const PopupMenuItem(
-                      value: 'favorites',
+                      value: ProductFilter.topRated,
+                      child: Text('Top Rated'),
+                    ),
+                    const PopupMenuItem(
+                      value: ProductFilter.favorites,
                       child: Text('Favorites'),
                     ),
                   ],
@@ -86,25 +91,25 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
                 const SizedBox(width: 8),
 
-                PopupMenuButton<String>(
+                PopupMenuButton<ProductSort>(
                   position: PopupMenuPosition.under,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   onSelected: (value) {
-                    setState(() => _selectedSort = value);
+                    ref.read(productSortProvider.notifier).state =value ;
                   },
                   itemBuilder: (context) => [
                     const PopupMenuItem(
-                      value: 'price_low',
+                      value: ProductSort.priceLowToHigh,
                       child: Text('Price: Low to High'),
                     ),
                     const PopupMenuItem(
-                      value: 'price_high',
+                      value: ProductSort.priceHighToLow,
                       child: Text('Price: High to Low'),
                     ),
                     const PopupMenuItem(
-                      value: 'rating',
+                      value: ProductSort.rating,
                       child: Text('Top Rated'),
                     ),
                   ],
@@ -147,23 +152,10 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         onRefresh: () async => ref.invalidate(productListNotifier),
         child: productsAsync.when(
           data: (products) {
-            List<ProductModel> filtered;
-
-            if (_selectedFilter == 'top') {
-              filtered = products.where((p) => p.isTopRated).toList();
-            } else if (_selectedFilter == 'favorites') {
-              filtered = products.where((p) => p.isFavorite).toList();
-            } else {
-              filtered = List.from(products);
-            }
-
-            if (_selectedSort == 'price_low') {
-              filtered.sort((a, b) => a.price.compareTo(b.price));
-            } else if (_selectedSort == 'price_high') {
-              filtered.sort((a, b) => b.price.compareTo(a.price));
-            } else if (_selectedSort == 'rating') {
-              filtered.sort((a, b) => b.rating.compareTo(a.rating));
-            }
+            final filtered = productsNotifier.getFilteredSortedProducts(
+              filter: selectedFilter,
+              sort: selectedSort,
+            );
 
             return GridView.builder(
               itemCount: filtered.length,

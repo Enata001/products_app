@@ -43,6 +43,43 @@ class ProductsNotifier extends StateNotifier<AsyncValue<List<ProductModel>>> {
     }
   }
 
+  List<ProductModel> getFilteredSortedProducts({
+    ProductFilter filter = ProductFilter.all,
+    ProductSort sort = ProductSort.none,
+  }) {
+    final currentState = state;
+    if (currentState is! AsyncData<List<ProductModel>>) return [];
+
+    List<ProductModel> products = List.from(currentState.value);
+
+    switch (filter) {
+      case ProductFilter.topRated:
+        products = products.where((p) => p.isTopRated).toList();
+        break;
+      case ProductFilter.favorites:
+        products = products.where((p) => p.isFavorite).toList();
+        break;
+      case ProductFilter.all:
+        break;
+    }
+
+    switch (sort) {
+      case ProductSort.priceLowToHigh:
+        products.sort((a, b) => a.price.compareTo(b.price));
+        break;
+      case ProductSort.priceHighToLow:
+        products.sort((a, b) => b.price.compareTo(a.price));
+        break;
+      case ProductSort.rating:
+        products.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+      case ProductSort.none:
+        break;
+    }
+
+    return products;
+  }
+
 }
 
 

@@ -63,3 +63,16 @@ class ProductModel {
     };
   }
 }
+
+enum ProductFilter {
+  all,
+  topRated,
+  favorites,
+}
+
+enum ProductSort {
+  none,
+  priceLowToHigh,
+  priceHighToLow,
+  rating,
+}
