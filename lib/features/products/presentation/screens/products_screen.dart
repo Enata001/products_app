@@ -143,48 +143,51 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         ],
       ),
 
-      body: productsAsync.when(
-        data: (products) {
-          List<ProductModel> filtered;
+      body: RefreshIndicator(
+        onRefresh: () async => ref.invalidate(productListNotifier),
+        child: productsAsync.when(
+          data: (products) {
+            List<ProductModel> filtered;
 
-          if (_selectedFilter == 'top') {
-            filtered = products.where((p) => p.isTopRated).toList();
-          } else if (_selectedFilter == 'favorites') {
-            filtered = products.where((p) => p.isFavorite).toList();
-          } else {
-            filtered = List.from(products);
-          }
+            if (_selectedFilter == 'top') {
+              filtered = products.where((p) => p.isTopRated).toList();
+            } else if (_selectedFilter == 'favorites') {
+              filtered = products.where((p) => p.isFavorite).toList();
+            } else {
+              filtered = List.from(products);
+            }
 
-          if (_selectedSort == 'price_low') {
-            filtered.sort((a, b) => a.price.compareTo(b.price));
-          } else if (_selectedSort == 'price_high') {
-            filtered.sort((a, b) => b.price.compareTo(a.price));
-          } else if (_selectedSort == 'rating') {
-            filtered.sort((a, b) => b.rating.compareTo(a.rating));
-          }
+            if (_selectedSort == 'price_low') {
+              filtered.sort((a, b) => a.price.compareTo(b.price));
+            } else if (_selectedSort == 'price_high') {
+              filtered.sort((a, b) => b.price.compareTo(a.price));
+            } else if (_selectedSort == 'rating') {
+              filtered.sort((a, b) => b.rating.compareTo(a.rating));
+            }
 
-          return GridView.builder(
-            itemCount: filtered.length,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 0.7,
-            ),
-            itemBuilder: (context, index) {
-              final product = filtered[index];
-              final offSet = index.isOdd ? 12.0 : 0.0;
-              return Transform.translate(
-                offset: Offset(0, offSet),
-                child: ProductCard(product: product),
-              );
-            },
-          );
-        },
-        error: (error, stackTrace) =>
-            Center(child: Text('Oops. Something went wrong: $error')),
-        loading: () => Center(child: CircularProgressIndicator()),
+            return GridView.builder(
+              itemCount: filtered.length,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.7,
+              ),
+              itemBuilder: (context, index) {
+                final product = filtered[index];
+                final offSet = index.isOdd ? 12.0 : 0.0;
+                return Transform.translate(
+                  offset: Offset(0, offSet),
+                  child: ProductCard(product: product),
+                );
+              },
+            );
+          },
+          error: (error, stackTrace) =>
+              Center(child: Text('Oops. Something went wrong: $error')),
+          loading: () => Center(child: CircularProgressIndicator()),
+        ),
       ),
     );
   }
