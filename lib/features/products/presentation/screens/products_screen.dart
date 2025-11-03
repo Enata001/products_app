@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:products_app/features/products/presentation/widgets/product_card.dart';
 import '../../data/products_provider.dart';
-import '../../models/product_model.dart';
+import '../widgets/custom_app_bar.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   const ProductsScreen({super.key});
@@ -12,7 +12,6 @@ class ProductsScreen extends ConsumerStatefulWidget {
 }
 
 class _ProductsScreenState extends ConsumerState<ProductsScreen> {
-
   @override
   Widget build(BuildContext context) {
     final productsAsync = ref.watch(productListNotifier);
@@ -22,131 +21,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Popular products',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.black,
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Row(
-              children: [
-                PopupMenuButton<ProductFilter>(
-                  position: PopupMenuPosition.under,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  onSelected: (value) {
-                    ref.read(productFilterProvider.notifier).state = value;
-                  },
-
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: ProductFilter.all,
-                      child: Text('All Products'),
-                    ),
-                    const PopupMenuItem(
-                      value: ProductFilter.topRated,
-                      child: Text('Top Rated'),
-                    ),
-                    const PopupMenuItem(
-                      value: ProductFilter.favorites,
-                      child: Text('Favorites'),
-                    ),
-                  ],
-                  child: OutlinedButton.icon(
-                    onPressed: null,
-                    iconAlignment: IconAlignment.end,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 0,
-                      ),
-                      minimumSize: const Size(0, 34),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      side: BorderSide(color: Theme.of(context).primaryColor),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      backgroundColor: Colors.white,
-                    ),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      size: 16,
-                      color: Colors.black,
-                    ),
-                    label: const Text(
-                      'Filter',
-                      style: TextStyle(fontSize: 13, color: Colors.black),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 8),
-
-                PopupMenuButton<ProductSort>(
-                  position: PopupMenuPosition.under,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  onSelected: (value) {
-                    ref.read(productSortProvider.notifier).state =value ;
-                  },
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: ProductSort.priceLowToHigh,
-                      child: Text('Price: Low to High'),
-                    ),
-                    const PopupMenuItem(
-                      value: ProductSort.priceHighToLow,
-                      child: Text('Price: High to Low'),
-                    ),
-                    const PopupMenuItem(
-                      value: ProductSort.rating,
-                      child: Text('Top Rated'),
-                    ),
-                  ],
-                  child: OutlinedButton.icon(
-                    onPressed: null,
-                    iconAlignment: IconAlignment.end,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 0,
-                      ),
-                      minimumSize: const Size(0, 34),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      side: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      backgroundColor: Colors.white,
-                    ),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 16,
-                      color: Colors.black,
-                    ),
-                    label: const Text(
-                      'Sort by',
-                      style: TextStyle(fontSize: 13, color: Colors.black),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(),
 
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(productListNotifier),
@@ -184,3 +59,4 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     );
   }
 }
+
