@@ -135,7 +135,7 @@ class _FilterTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 30,
-      padding: EdgeInsets.symmetric(horizontal: 4),
+      padding: EdgeInsets.symmetric(horizontal: 4,vertical: 0),
       decoration: BoxDecoration(
         border: Border.all(
           color: Theme
@@ -151,11 +151,11 @@ class _FilterTab extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-                fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+                fontSize: 11, color: Colors.black, fontWeight: FontWeight.bold),
           ),
           const Icon(
             Icons.keyboard_arrow_down_rounded,
-            size: 16,
+            size: 14,
             color: Colors.black,
           ),
         ],

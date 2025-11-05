@@ -39,7 +39,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
-                childAspectRatio: 0.78,
+                childAspectRatio: 0.79,
               ),
               itemBuilder: (context, index) {
                 final product = filtered[index];

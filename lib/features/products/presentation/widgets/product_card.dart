@@ -32,7 +32,7 @@ class ProductCard extends ConsumerWidget {
                 child: Image.network(
                   product.thumbnail,
                   fit: BoxFit.contain,
-                  height: 140,
+                  height: 135,
                   width: double.infinity,
                 ),
               ),
