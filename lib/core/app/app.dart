@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
         title: 'Products App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Color(0xFF239175)
+          primaryColor: Color(0xFF108769)
         ),
         home: const ProductsScreen(),
       ),
