@@ -7,7 +7,6 @@ import '../../models/product_model.dart';
 class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
 
-
   String getFilterLabel(ProductFilter filter) {
     switch (filter) {
       case ProductFilter.topRated:
@@ -16,7 +15,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
         return 'Favorites';
       case ProductFilter.all:
       default:
-        return 'All Products';
+        return 'Filter';
     }
   }
 
@@ -33,12 +32,10 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedFilter = ref.watch(productFilterProvider);
     final selectedSort = ref.watch(productSortProvider);
-
 
     return AppBar(
       backgroundColor: Colors.white,
@@ -53,7 +50,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 12),
+          padding: const EdgeInsets.only(right: 16),
           child: Row(
             children: [
               PopupMenuButton<ProductFilter>(
@@ -62,10 +59,13 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 onSelected: (value) {
-                  ref.read(productFilterProvider.notifier).state = value;
+                  ref
+                      .read(productFilterProvider.notifier)
+                      .state = value;
                 },
 
-                itemBuilder: (context) => [
+                itemBuilder: (context) =>
+                [
                   const PopupMenuItem(
                     value: ProductFilter.all,
                     child: Text('All Products'),
@@ -79,35 +79,12 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     child: Text('Favorites'),
                   ),
                 ],
-                child: OutlinedButton.icon(
-                  onPressed: null,
-                  iconAlignment: IconAlignment.end,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 0,
-                    ),
-                    minimumSize: const Size(0, 34),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    side: BorderSide(color: Theme.of(context).primaryColor),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    backgroundColor: Colors.white,
-                  ),
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 16,
-                    color: Colors.black,
-                  ),
-                  label: Text(
-                    getFilterLabel(selectedFilter),
-                    style: TextStyle(fontSize: 13, color: Colors.black),
-                  ),
+                child: _FilterTab(label:
+                getFilterLabel(selectedFilter),
                 ),
               ),
 
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
 
               PopupMenuButton<ProductSort>(
                 position: PopupMenuPosition.under,
@@ -115,9 +92,12 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 onSelected: (value) {
-                  ref.read(productSortProvider.notifier).state = value;
+                  ref
+                      .read(productSortProvider.notifier)
+                      .state = value;
                 },
-                itemBuilder: (context) => [
+                itemBuilder: (context) =>
+                [
                   const PopupMenuItem(
                     value: ProductSort.priceLowToHigh,
                     child: Text('Price: Low to High'),
@@ -131,33 +111,8 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     child: Text('Top Rated'),
                   ),
                 ],
-                child: OutlinedButton.icon(
-                  onPressed: null,
-                  iconAlignment: IconAlignment.end,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 0,
-                    ),
-                    minimumSize: const Size(0, 34),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    side: BorderSide(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    backgroundColor: Colors.white,
-                  ),
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 16,
-                    color: Colors.black,
-                  ),
-                  label: Text(
-                    getSortLabel(selectedSort),
-                    style: TextStyle(fontSize: 13, color: Colors.black),
-                  ),
+                child: _FilterTab(label:
+                getSortLabel(selectedSort),
                 ),
               ),
             ],
@@ -169,4 +124,42 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _FilterTab extends StatelessWidget {
+  final String label;
+
+  const _FilterTab({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 30,
+      padding: EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Theme
+              .of(context)
+              .primaryColor,
+          width: 1.2,
+        ),
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
+      ),
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+                fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            size: 16,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
 }

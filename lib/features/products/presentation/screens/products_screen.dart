@@ -37,13 +37,13 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.7,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.78,
               ),
               itemBuilder: (context, index) {
                 final product = filtered[index];
-                final offSet = index.isOdd ? 12.0 : 0.0;
+                final offSet = index.isOdd ? 10.0 : 0.0;
                 return Transform.translate(
                   offset: Offset(0, offSet),
                   child: ProductCard(product: product),
@@ -53,7 +53,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           },
           error: (error, stackTrace) =>
               Center(child: Text('Oops. Something went wrong: $error')),
-          loading: () => Center(child: CircularProgressIndicator()),
+          loading: () => Center(child: Text('Loading')),
         ),
       ),
     );
